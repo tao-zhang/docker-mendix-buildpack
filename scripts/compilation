@@ -17,7 +17,7 @@ logging.basicConfig(
 def export_vcap_services():
     logging.debug("Executing build_vcap_services...")
 
-    vcap_services_data = open("vcap_services.json").read()
+    vcap_services_data = open("buildpack/vcap_services.json").read()
     vcap_services = json.loads(vcap_services_data)
 
     vcap_services_str = json.dumps(vcap_services, sort_keys=True, indent=4,
@@ -29,7 +29,7 @@ def export_vcap_services():
 
 def call_builpack_compilation():
     logging.debug("Executing call_builpack_compilation...")
-    subprocess.call(["/buildpack/bin/compile", BUILD_PATH, CACHE_PATH])
+    subprocess.call(["buildpack/bin/compile", BUILD_PATH, CACHE_PATH])
 
 if __name__ == '__main__':
     logging.info("Mendix project compilation phase...")
