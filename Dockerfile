@@ -14,20 +14,18 @@ ARG BUILD_PATH
 RUN useradd -ms /bin/bash mendix
 
 # Log in with Mendix user
-WORKDIR /home/mendix
+WORKDIR /home/vcap
 
 # Checkout CF Build-pack here
 RUN mkdir -p buildpack/.local && \
   (wget -qO- https://github.com/mendix/cf-mendix-buildpack/archive/more_robust_license_file_path.tar.gz \
   | tar xvz -C buildpack --strip-components 1)
 
-
-
 # Copy python scripts which execute the buildpack (exporting the VCAP variables)
 COPY scripts buildpack/
 
 # Add the buildpack modules
-ENV PYTHONPATH "/home/mendix/buildpack/lib/"
+ENV PYTHONPATH "/home/vcap/buildpack/lib/"
 
 # Create the build destination
 RUN mkdir build cache
@@ -35,20 +33,20 @@ COPY $BUILD_PATH build/
 
 # Compile the application source code
 # WORKDIR /home/mendix/buildpack
-RUN ["/home/mendix/buildpack/compilation", "/home/mendix/build", "/home/mendix/cache"]
+RUN ["/home/vcap/buildpack/compilation", "/home/vcap/build", "/home/vcap/cache"]
 
 # Expose nginx port
-ENV PORT 80
+ENV PORT 8080
 EXPOSE $PORT
 
 # Change owner of build folder
-RUN chown -R mendix /home/mendix/build
+RUN chown -R vcap /home/vcap/build
 
 # Login as mendix
-USER mendix
+USER vcap
 
 # Start up application
-COPY scripts /home/mendix/build/
-WORKDIR /home/mendix/build
+COPY scripts /home/vcap/build/
+WORKDIR /home/vcap/build
 
-ENTRYPOINT ["/home/mendix/build/startup","/home/mendix/build/start.py"]
+ENTRYPOINT ["/home/vcap/build/startup","/home/vcap/build/start.py"]
