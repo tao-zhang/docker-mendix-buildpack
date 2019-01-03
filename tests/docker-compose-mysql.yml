@@ -1,6 +1,12 @@
 version: '2.3'
 
 services:
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        ports:
+            - 80:80
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
     mendixapp:
         image: mendix/mendix-buildpack:v1.3
         healthcheck:
@@ -12,11 +18,14 @@ services:
         environment:
             ADMIN_PASSWORD: Password1!
             DATABASE_ENDPOINT: mysql://mendix:mendix@db:3306/mendix
+            VIRTUAL_HOST: localhost
         ports:
             - 8080:80
             - 8090:81
         links:
             - db
+        expose:
+            - 80
         # restart: always
     db:
         image: mysql:5.7
