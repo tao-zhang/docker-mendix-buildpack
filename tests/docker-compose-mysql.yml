@@ -18,7 +18,7 @@ services:
         environment:
             ADMIN_PASSWORD: Password1!
             DATABASE_ENDPOINT: mysql://mendix:mendix@db:3306/mendix
-            VIRTUAL_HOST: localhost
+            VIRTUAL_HOST: mendix.test
         ports:
             - 8080:80
             - 8090:81
